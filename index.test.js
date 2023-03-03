@@ -1,5 +1,5 @@
 const {sequelize} = require('./db')
-const {User, Board, Cheese} = require('./models/index')
+const {User, Board, Cheese} = require('./index')
 
 describe('Models', () => {
 
@@ -21,5 +21,34 @@ describe('Models', () => {
         const testCheese = await Cheese.create({ title: 'bluecheese', description: 'stinky' });
         expect(testCheese.name).toBe('bluecheese');
     })
+
+    test('Multiple Boards can be added to a User.', async () => {
+        const testMultiBoard = await Board.findAll();
+        expect(testMultiBoard.getBoard().type).toBe('french');
+    })
+
+    test('Multiple Boards can be added to a User.', async () => {
+        const testMultiBoard = await Board.findAll();
+        expect(testMultiBoard.getBoard().type).toBe('french');
+    })
+
+    test('A Board can have many Cheeses.', async () => {
+        const testBoardMultiCheese = await Cheese.findAll();
+        expect(testBoardMultiCheese.getCheese().title).toBe('bluecheese');
+    })
+
+    test(' A Cheese can be on many Boards.', async () => {
+        const testCheeseMultiBoard = await Board.findAll();
+        expect(testCheeseMultiBoard.getBoard().type).toBe('french');
+    })
+
+    test('Eager Loading - A user can be loaded with its boards', async () =>{
+        const testUserLoadBoard = await Board.findAll({
+         include: [
+             { model: User, as: "user"},
+         ]
+        });
+        expect(testUserLoadBoard.getBoard().type).toBe('french')
+     })
 
 })
